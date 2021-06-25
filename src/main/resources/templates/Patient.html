@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+
+      layout:decorate="template"
+>
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+
+<div layout:fragment="content">
+
+  <div class="card mt-5">
+    <div class="card header">List des Patients</div>
+  </div>
+
+  <form class="form-inline my-2 my-lg-0" method="get" th:action="@{Patient}">
+    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="mc" th:value="${mc}">
+    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Rechercher</button>
+  </form>
+
+  <table class="table">
+    <thead class="thead-dark">
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">nom</th>
+      <th scope="col">date_de_naissance</th>
+      <th scope="col">malade</th>
+      <th scope="col"></th>
+      <th scope="col"></th>
+
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="p:${patient}">
+      <td th:text="${p.id}"></td>
+      <td th:text="${p.nom}"></td>
+      <td th:text="${p.date_de_naissance}"></td>
+      <td th:text="${p.malade}"></td>
+      <td> <a class="btn btn-success" sec:authorize="hasRole('ADMIN')" th:href="@{modifierPatient (id=${p.id})}">Modifier</a></td>
+      <td> <a class="btn btn-danger" sec:authorize="hasRole('ADMIN')" th:href="@{supprimerPatient (id=${p.id})}">Supprimer</a></td>
+    </tr>
+    </tbody>
+  </table>
+  <ul class="pagination">
+    <li th:each="page,status:${pages}" th:class="${currentPage == status.index}? 'page-item active': 'page-item'">
+      <a class="page-link" th:href="@{Patient(page=${status.index}, size=${size}, mc=${mc})}" th:text="${status.count}"></a>
+    </li>
+  </ul>
+
+    </ul>
+</div>
+
+</body>
+</html>
